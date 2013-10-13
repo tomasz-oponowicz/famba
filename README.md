@@ -37,8 +37,7 @@ Please install [Git](http://git-scm.com/) and [Heroku command line](https://tool
 
 1. Create a free instance of the famba with the Heroku:
 
-		git clone git@github.com:tomasz-oponowicz/famba.git
-		cd <famba workspace>
+		git clone git@github.com:tomasz-oponowicz/famba.git && cd ./famba
 		heroku apps:create <your Heroku application ID>
 		heroku addons:add mongohq:sandbox
 		heroku run rake add_sample_website
