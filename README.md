@@ -1,7 +1,7 @@
 famba
 =====
 
-Prefetching mechanism, for your website, controlled by users' activity.
+Prefetching mechanism, for your website, controlled by users' activity. For a brief overview visit a [promotion page](http://tomasz-oponowicz.github.io/famba/).
 
 ## Try locally
 
