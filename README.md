@@ -56,8 +56,8 @@ Please install [Git](http://git-scm.com/) and [Heroku command line](https://tool
 				var a=document.createElement("script");
 				a.type="text/javascript";
 				a.async=!0;
-				
 				a.src=fambaBaseURL+"/js/famba.min.js";
+				
 				var b=document.getElementsByTagName("script")[0];
 				b.parentNode.insertBefore(a,b);
 			})();
