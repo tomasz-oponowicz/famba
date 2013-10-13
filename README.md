@@ -13,8 +13,8 @@ Please install [Git](http://git-scm.com/), [Mongo](http://www.mongodb.org/), [Ru
 
 1. Clone the famba repository:
 
-		git clone git@github.com:tomasz-oponowicz/famba.git
-		
+		git clone git@github.com:tomasz-oponowicz/famba.git && cd ./famba
+
 1. Add a reference to a sample website in a database:
 
 		rake add_sample_website
