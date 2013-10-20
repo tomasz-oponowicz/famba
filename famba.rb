@@ -22,6 +22,9 @@ configure do
 end
 
 configure :development do
+
+  # disable access logs for WEBrick
+  set :server_settings, { :AccessLog => [] }
   set :logging, Logger::DEBUG  
 end   
 
