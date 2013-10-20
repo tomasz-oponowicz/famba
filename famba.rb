@@ -34,7 +34,8 @@ helpers do
   end 
 
   def generate_user_id_if_needed
-    cookies[:user_id] = SecureRandom.uuid if cookies[:user_id].nil?
+    # `cookies[:user_id] = SecureRandom.uuid` sets domain as "localhost" but should be empty
+    response.set_cookie("user_id", :value => SecureRandom.uuid) if cookies[:user_id].nil?
   end
 
   def valid_parameters
