@@ -1,0 +1,20 @@
+<html>
+    <body>
+        <ul>
+            <li><a href="/test1.html">test1.html</a></li>
+            <li><a href="/test2.html">test2.html</a></li>
+            <li><a href="/test3.html">test3.html</a></li>
+        </ul>
+        <script type="text/javascript">
+            var fambaConfig = fambaConfig || {};
+
+            fambaConfig['app_id'] = '513dfad9e779892946000048';
+            fambaConfig['tracking_url'] = 'http://localhost:4567/t';
+
+            (function() {
+              var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src="http://localhost:4567/js/famba.js";
+              var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b);
+            })();
+        </script>
+    </body>
+</html>

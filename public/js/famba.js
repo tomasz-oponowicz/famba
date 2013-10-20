@@ -29,18 +29,18 @@ var ENABLE_DEBUG = true;
     return window['chrome'];
   }
 
-  function isSuccess(request) {
-    return request.readyState == 4 && request.status == 200;
-  }
-
   function isEmpty(value) {
     return !value || 0 === value.length;
   }
 
   function markIfPrerendered () {
     prerendered = (document['webkitVisibilityState'] == 'prerender');
-    if (ENABLE_DEBUG && prerendered) {
-      window['console'].log("Page is prerendered");
+    if (ENABLE_DEBUG) {
+      if (prerendered) {
+        window['console'].log("Page is prerendered");  
+      } else {
+        window['console'].log("Page isn't prerendered");  
+      }      
     }
   }
 
@@ -79,6 +79,9 @@ var ENABLE_DEBUG = true;
 
   function trackAndSuggest() {
     if (tracked) {
+      if (ENABLE_DEBUG) {
+        window['console'].log("Skipped tracking because it was already tracked");
+      }
       return;
     }
 
@@ -87,9 +90,33 @@ var ENABLE_DEBUG = true;
     request.open("GET", buildUrl(true), true);
 
     request.onreadystatechange = function() {
-      if (isSuccess(request) && !isEmpty(request.responseText)) {
-        createAndAppendLinkElement(request.responseText);
+
+      // halt if a request isn't finished and a response isn't ready
+      if (request.readyState != 4) {
+        return;
       }
+
+      // halt if a server error
+      if (request.status != 200 && request.status != 204) {
+        if (ENABLE_DEBUG) {
+          window['console'].log("An error occurs while calling tracking method");
+        }        
+        return;
+      }
+
+      // halt if no suggestion
+      if (request.status == 204) {
+        if (ENABLE_DEBUG) {
+          window['console'].log("No suggestion");
+        }
+        return;
+      }
+
+      if (ENABLE_DEBUG) {
+        window['console'].log("Suggested a next page, url='" + request.responseText + "'");
+      }
+
+      createAndAppendLinkElement(request.responseText);
     };
 
     tracked = true;
@@ -110,6 +137,12 @@ var ENABLE_DEBUG = true;
       url += '&load_speed=' + encodeURIComponent(getLoadSpeed());
     } else {
       url += '&supported=false';
+      url += '&prerendered=false';
+      url += '&load_speed=0';      
+    }
+
+    if (ENABLE_DEBUG) {
+      window['console'].log("Built tracking URL, url='" + url + "'");
     }
 
     return url;
