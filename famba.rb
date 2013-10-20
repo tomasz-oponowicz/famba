@@ -18,10 +18,12 @@ configure do
 
   # replace hash with structure
   settings.suggestion = DeepStruct.new(settings.suggestion)
-
-  set :logging, Logger::DEBUG
   set :database, build_database_connection(settings.mongodb_uri)
 end
+
+configure :development do
+  set :logging, Logger::DEBUG  
+end   
 
 helpers do  
   def unregistered_application?(application_id)
