@@ -6,9 +6,9 @@ require 'mongo'
 require 'json/ext'
 require 'rack/logger'
 
-require_relative 'utils'
-require_relative 'events'
-require_relative 'transitions'
+require_relative 'helpers/utils'
+require_relative 'helpers/events'
+require_relative 'helpers/transitions'
 
 include Mongo
 
