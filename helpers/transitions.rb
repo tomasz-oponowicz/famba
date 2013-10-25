@@ -9,10 +9,10 @@ module Transitions
           target_url: this.url
         },       
         { // value
-          allEvents: {
+          all_events: {
             count: 1
           },
-          lastEvents: {
+          last_events: {
             count: (this.timestamp > from ? 1 : 0) // does an event occur within past hours?
           }          
         }        
@@ -23,15 +23,15 @@ module Transitions
   REDUCE = %Q{
     function (id, values) {
       var result = {
-        allEvents: {
+        all_events: {
           count: values.length
         },
-        lastEvents: {
+        last_events: {
           count: 0
         }
       };
 
-      values.forEach(function(value) { result.lastEvents.count += value.lastEvents.count; });
+      values.forEach(function(value) { result.last_events.count += value.last_events.count; });
 
       return result;
     };      
@@ -39,11 +39,11 @@ module Transitions
 
   FINALIZE = %Q{
     function (id, value) {
-      value.allEvents.percentComparableToAllEventsForPreviousUrl = 
-        (allEventsForPreviousUrlCount != 0) ? (value.allEvents.count / allEventsForPreviousUrlCount) : 0;
+      value.all_events.percent_comparable_to_all_events_for_previous_url = 
+        (allEventsForPreviousUrlCount != 0) ? (value.all_events.count / allEventsForPreviousUrlCount) : 0;
 
-      value.lastEvents.percentComparableToLastEventsForPreviousUrl = 
-        (lastEventsForPreviousUrlCount != 0) ? (value.lastEvents.count / lastEventsForPreviousUrlCount) : 0;
+      value.last_events.percent_comparable_to_last_events_for_previous_url = 
+        (lastEventsForPreviousUrlCount != 0) ? (value.last_events.count / lastEventsForPreviousUrlCount) : 0;
 
       return value;
     };      
@@ -101,18 +101,18 @@ module Transitions
         '_id.source_url' => url,
         '$or' => [
           {
-            'value.allEvents.count' => {
+            'value.all_events.count' => {
               '$gte' => settings.suggestion.criteria.transition.all_events.min_count
             },
-            'value.allEvents.percentComparableToAllEventsForPreviousUrl' => {
+            'value.all_events.percent_comparable_to_all_events_for_previous_url' => {
               '$gte' => settings.suggestion.criteria.transition.all_events.min_percent_comparable_to_all_events_for_previous_url
             }              
           },
           {
-            'value.lastEvents.count' => {
+            'value.last_events.count' => {
               '$gte' => settings.suggestion.criteria.transition.last_events.min_count
             },
-            'value.lastEvents.percentComparableToLastEventsForPreviousUrl' => {
+            'value.last_events.percent_comparable_to_last_events_for_previous_url' => {
               '$gte' => settings.suggestion.criteria.transition.last_events.min_percent_comparable_to_last_events_for_previous_url
             }              
           }          
@@ -120,8 +120,8 @@ module Transitions
       },
       { # options
         :sort => [
-          ['value.lastEvents.percentComparableToLastEventsForPreviousUrl', -1],
-          ['value.allEvents.percentComparableToAllEventsForPreviousUrl', -1]
+          ['value.last_events.percent_comparable_to_last_events_for_previous_url', -1],
+          ['value.all_events.percent_comparable_to_all_events_for_previousUrl', -1]
         ]
       }
     )
@@ -140,8 +140,8 @@ module Transitions
       "Suggested a next page, " \
         "url='#{transition._id.target_url}', " \
         "source_url='#{transition._id.source_url}', " \
-        "all_percent='#{transition.value.allEvents.percentComparableToAllEventsForPreviousUrl}', " \
-        "last_percent='#{transition.value.lastEvents.percentComparableToLastEventsForPreviousUrl}'"
+        "all_percent='#{transition.value.all_events.percent_comparable_to_all_events_for_previous_url}', " \
+        "last_percent='#{transition.value.last_events.percent_comparable_to_last_events_for_previous_url}'"
     )
 
     transition._id.target_url
