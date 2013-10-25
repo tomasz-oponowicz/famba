@@ -14,11 +14,11 @@ class ApiTest < Test::Unit::TestCase
   end
 
   def teardown
-
-  	# clean all collections
-  	app.settings.database['applications'].remove()
-  	app.settings.database['events'].remove()
-  	app.settings.database['transitions'].remove()
+    
+    # clean all collections
+    app.settings.database['applications'].remove()
+    app.settings.database['events'].remove()
+    app.settings.database['transitions'].remove()
   end
 
   def test_trackAndSuggest_undefinedApplicationId_unauthorized
@@ -41,7 +41,7 @@ class ApiTest < Test::Unit::TestCase
 
   def test_trackAndSuggest_validApplicationId_authorized
 
-  	# given
+    # given
     @applicationFactory.create({ :_id => BSON::ObjectId("513dfad9e779892946000048") })
 
     # when
@@ -158,8 +158,7 @@ class ApiTest < Test::Unit::TestCase
     # given
     application = @applicationFactory.create
 
-    # when
-    
+    # when    
     get '/t', :app_id => application[:_id], :previous_url => 'foo', :url => 'bar', :supported => true, :prerendered => true, :load_speed => 100
 
     # then    
@@ -171,14 +170,14 @@ class ApiTest < Test::Unit::TestCase
       @collection = collection
     end
 
-  	def create(fields = {})
+    def create(fields = {})
       application = build(fields)
       @collection.insert(application)
       application
-  	end
+    end
 
-  	def build(fields = {})
-		  { :_id => BSON::ObjectId("513dfad9e779892946000048"), :name => "Sample website" }.merge(fields)  		
-  	end
+    def build(fields = {})
+      { :_id => BSON::ObjectId("513dfad9e779892946000048"), :name => "Sample website" }.merge(fields)     
+    end
   end
 end
