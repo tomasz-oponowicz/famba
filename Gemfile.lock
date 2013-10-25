@@ -13,6 +13,7 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
+    rake (10.1.0)
     sinatra (1.4.3)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -32,5 +33,6 @@ PLATFORMS
 DEPENDENCIES
   bson_ext (~> 1.9.2)
   mongo (~> 1.9.2)
+  rake (~> 10.1.0)
   sinatra (~> 1.4.3)
   sinatra-contrib (~> 1.4.1)
