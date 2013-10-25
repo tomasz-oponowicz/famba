@@ -5,7 +5,7 @@ var ENABLE_DEBUG = true;
 (function() {
 
   /** @const */
-  var DEFAULT_TRACKING_URL = "http://famba.local/t";
+  var DEFAULT_TRACKING_URL = "http://localhost:4567/t";
 
   /** @const */
   var CONFIGURATION = window['fambaConfig'];
