@@ -10,6 +10,11 @@ task :minify_javascripts do
 end
 
 Rake::TestTask.new do |t|
+
+  # set test enviorment
+  ENV['RACK_ENV'] = 'test'
+
+  # invoke all test in directory 'test/functional'
   t.libs << "test"
   t.test_files = FileList['test/functional/*_test.rb']
   t.verbose = true

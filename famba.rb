@@ -30,7 +30,7 @@ end
 
 helpers do  
   def unregistered_application?(application_id)
-    return true if application_id.nil?
+    return true unless BSON::ObjectId.legal?(application_id)
     settings.database['applications'].find_one(:_id => BSON::ObjectId(application_id)).nil?
   end 
 
@@ -39,10 +39,14 @@ helpers do
     response.set_cookie("user_id", :value => SecureRandom.uuid) if cookies[:user_id].nil?
   end
 
-  def valid_parameters
+  def valid_parameters    
+    %w(app_id previous_url url supported prerendered load_speed).each do |param| 
+      halt 400 if params[param].nil?
+    end
+
     # previous_url can be empty
-    %w(app_id supported prerendered load_speed url).each do |param| 
-      halt 400 if params[param].nil? || params[param].empty?
+    %w(app_id url supported prerendered load_speed).each do |param| 
+      halt 400 if params[param].empty?
     end    
   end
 end
