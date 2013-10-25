@@ -29,7 +29,7 @@ Please install [Git](http://git-scm.com/), [Mongo](http://www.mongodb.org/), [Ru
 
 1. Go to:
 
-		http://localhost:XXX/sample.html
+		http://localhost:4567/test1.html
 
 ## Install inside your website
 
