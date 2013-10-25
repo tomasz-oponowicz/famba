@@ -175,6 +175,25 @@ class ApiTest < Test::Unit::TestCase
     assert_equal 'bar', last_response.body
   end
 
+  def test_trackAndSuggest_enoughEventsAndNotSupported_urlNotSuggested
+
+    # given
+    application = @applicationFactory.create
+
+    any_events # reset criteria
+    diselect_last_events
+    app.settings.suggestion.criteria.transition.all_events.min_count = 2    
+
+    @eventFactory.create({ :previous_url => 'foo', :url => 'bar' })
+    @eventFactory.create({ :previous_url => 'foo', :url => 'bar' })
+
+    # when    
+    get '/t', :app_id => application[:_id], :previous_url => '', :url => 'foo', :supported => false, :prerendered => true, :load_speed => 100
+
+    # then
+    assert_equal 204, last_response.status
+  end
+
   def test_trackAndSuggest_twoTransitionsAndFirstLessPopular_secondUrlSuggested
 
     # given
