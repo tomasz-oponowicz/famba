@@ -3,6 +3,8 @@ famba
 
 Prefetching mechanism, for your website, controlled by users' activity. For a brief overview visit a [promotion page](http://tomasz-oponowicz.github.io/famba).
 
+[![Build Status](https://travis-ci.org/tomasz-oponowicz/famba.png?branch=master)](https://travis-ci.org/tomasz-oponowicz/famba)
+
 ## Try locally
 
 Please install [Git](http://git-scm.com/), [Mongo](http://www.mongodb.org/), [Ruby](https://www.ruby-lang.org/en/), [Rake](http://rake.rubyforge.org/) and [Bundler](http://bundler.io/) before you start.
