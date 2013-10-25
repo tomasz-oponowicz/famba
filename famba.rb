@@ -30,6 +30,7 @@ end
 
 helpers do  
   def unregistered_application?(application_id)
+    return true if application_id.nil?
     settings.database['applications'].find_one(:_id => BSON::ObjectId(application_id)).nil?
   end 
 
