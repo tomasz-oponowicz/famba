@@ -29,9 +29,13 @@ Please install [Git](http://git-scm.com/), [Mongo](http://www.mongodb.org/), [Ru
 
 		ruby famba.rb
 
-1. Go to:
+1. Go to (using Google Chrome):
 
 		http://localhost:4567/test1.html
+		
+   Navigate between `test1`, `test2` and `test3` links. Record pattern. Look for a `&prerender=true` in log messages. It indicates that page was successfully prerender.
+
+   _TIP:_ Google Chrome won't prerender page if developer tools are open.
 
 ## Install inside your website
 
