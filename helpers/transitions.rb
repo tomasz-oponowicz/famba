@@ -100,22 +100,22 @@ module Transitions
         '_id.application_id' => application_id,
         '_id.source_url' => url,
         '$or' => [
-          '$and' => [
+          {
             'value.allEvents.count' => {
-              '$gt' => settings.suggestion.criteria.transition.all_events.min_count
+              '$gte' => settings.suggestion.criteria.transition.all_events.min_count
             },
             'value.allEvents.percentComparableToAllEventsForPreviousUrl' => {
-              '$gt' => settings.suggestion.criteria.transition.all_events.min_percent_comparable_to_all_events_for_previous_url
+              '$gte' => settings.suggestion.criteria.transition.all_events.min_percent_comparable_to_all_events_for_previous_url
             }              
-          ],
-          '$and' => [
+          },
+          {
             'value.lastEvents.count' => {
-              '$gt' => settings.suggestion.criteria.transition.last_events.min_count
+              '$gte' => settings.suggestion.criteria.transition.last_events.min_count
             },
             'value.lastEvents.percentComparableToLastEventsForPreviousUrl' => {
-              '$gt' => settings.suggestion.criteria.transition.last_events.min_percent_comparable_to_last_events_for_previous_url
+              '$gte' => settings.suggestion.criteria.transition.last_events.min_percent_comparable_to_last_events_for_previous_url
             }              
-          ]          
+          }          
         ],          
       },
       { # options

@@ -14,5 +14,5 @@ module Events
 
   def save_event(event)
     settings.database['events'].insert(event)
-  end			  
+  end       
 end

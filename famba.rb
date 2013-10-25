@@ -62,6 +62,7 @@ get '/t' do
   event = build_event
   save_event(event)
 
+  # TODO performance: if not supported don't calculate suggestion
   suggestion = suggest_next_url(event[:url], event[:application_id])
   status 204 if suggestion.nil?
   suggestion
