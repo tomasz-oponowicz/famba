@@ -137,7 +137,7 @@ class ApiTest < Test::Unit::TestCase
     assert_equal 100, event['load_speed']
   end  
 
-  def test_trackAndSuggest_lackingEvents_urlNotSuggested
+  def test_trackAndSuggest_insufficientEventsCount_urlNotSuggested
 
     # given
     application = @applicationFactory.create
@@ -155,7 +155,7 @@ class ApiTest < Test::Unit::TestCase
     assert_equal 204, last_response.status
   end
 
-  def test_trackAndSuggest_enoughEvents_urlSuggested
+  def test_trackAndSuggest_sufficientEventsCount_urlSuggested
 
     # given
     application = @applicationFactory.create
@@ -175,7 +175,7 @@ class ApiTest < Test::Unit::TestCase
     assert_equal 'bar', last_response.body
   end
 
-  def test_trackAndSuggest_enoughEventsAndNotSupported_urlNotSuggested
+  def test_trackAndSuggest_sufficientEventsCountAndNotSupported_urlNotSuggested
 
     # given
     application = @applicationFactory.create
@@ -253,7 +253,7 @@ class ApiTest < Test::Unit::TestCase
     assert_equal 'baz', last_response.body
   end  
 
-  def test_trackAndSuggest_twoTransitionsEquallyPopularRecentlyButFirstMorePopularAllTheTime_firstUrlSuggested
+  def test_trackAndSuggest_twoTransitionsEquallyPopularRecentlyButFirstMorePopularSinceTheBegining_firstUrlSuggested
 
     # given
     application = @applicationFactory.create
@@ -286,6 +286,42 @@ class ApiTest < Test::Unit::TestCase
     assert_equal 200, last_response.status
     assert_equal 'bar', last_response.body
   end  
+
+   def test_trackAndSuggest_twoTransitionsWithInsufficientEventsCountRecentlyButFirstMorePopularSinceTheBegining_firstUrlSuggested
+
+    # given
+    application = @applicationFactory.create
+
+    any_events # reset criteria    
+    app.settings.suggestion.criteria.transition.all_events.min_count = 2
+    app.settings.suggestion.criteria.transition.last_events.min_count = 3
+    app.settings.suggestion.criteria.transition.last_events.past_hours = 1
+
+    # past (foo -> bar is more pupular)
+
+    @eventFactory.create({ :previous_url => 'foo', :url => 'bar', :timestamp => Time.at(0) })
+    @eventFactory.create({ :previous_url => 'foo', :url => 'bar', :timestamp => Time.at(0) })
+    @eventFactory.create({ :previous_url => 'foo', :url => 'bar', :timestamp => Time.at(0) })
+    @eventFactory.create({ :previous_url => 'foo', :url => 'bar', :timestamp => Time.at(0) })
+
+    @eventFactory.create({ :previous_url => 'foo', :url => 'baz', :timestamp => Time.at(0) })
+    @eventFactory.create({ :previous_url => 'foo', :url => 'baz', :timestamp => Time.at(0) })
+
+    # recently (foo -> baz and foo -> bar are equally pupular)
+
+    @eventFactory.create({ :previous_url => 'foo', :url => 'bar', :timestamp => Time.now })
+    @eventFactory.create({ :previous_url => 'foo', :url => 'bar', :timestamp => Time.now })
+
+    @eventFactory.create({ :previous_url => 'foo', :url => 'baz', :timestamp => Time.now })
+    @eventFactory.create({ :previous_url => 'foo', :url => 'baz', :timestamp => Time.now })
+
+    # when    
+    get '/t', :app_id => application[:_id], :previous_url => '', :url => 'foo', :supported => true, :prerendered => true, :load_speed => 100
+
+    # then    
+    assert_equal 200, last_response.status
+    assert_equal 'bar', last_response.body
+  end   
 
   # helpers
 

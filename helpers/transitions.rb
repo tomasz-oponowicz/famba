@@ -95,28 +95,16 @@ module Transitions
   end
 
   def find_the_most_possible_transition(url, application_id)
-    settings.database['transitions'].find_one(
+    transition = settings.database['transitions'].find_one(
       { # selector
         '_id.application_id' => application_id,
         '_id.source_url' => url,
-        '$or' => [
-          {
-            'value.all_events.count' => {
-              '$gte' => settings.suggestion.criteria.transition.all_events.min_count
-            },
-            'value.all_events.percent_comparable_to_all_events_for_previous_url' => {
-              '$gte' => settings.suggestion.criteria.transition.all_events.min_percent_comparable_to_all_events_for_previous_url
-            }              
-          },
-          {
-            'value.last_events.count' => {
-              '$gte' => settings.suggestion.criteria.transition.last_events.min_count
-            },
-            'value.last_events.percent_comparable_to_last_events_for_previous_url' => {
-              '$gte' => settings.suggestion.criteria.transition.last_events.min_percent_comparable_to_last_events_for_previous_url
-            }              
-          }          
-        ],          
+        'value.all_events.count' => {
+          '$gte' => settings.suggestion.criteria.transition.all_events.min_count
+        },
+        'value.all_events.percent_comparable_to_all_events_for_previous_url' => {
+          '$gte' => settings.suggestion.criteria.transition.all_events.min_percent_comparable_to_all_events_for_previous_url
+        } 
       },
       { # options
         :sort => [
@@ -125,6 +113,28 @@ module Transitions
         ]
       }
     )
+
+    return transition unless transition.nil?
+
+    settings.database['transitions'].find_one(
+      { # selector
+        '_id.application_id' => application_id,
+        '_id.source_url' => url,
+        'value.last_events.count' => {
+          '$gte' => settings.suggestion.criteria.transition.last_events.min_count
+        },
+        'value.last_events.percent_comparable_to_last_events_for_previous_url' => {
+          '$gte' => settings.suggestion.criteria.transition.last_events.min_percent_comparable_to_last_events_for_previous_url
+        }
+      },
+      { # options
+        :sort => [
+          ['value.all_events.percent_comparable_to_all_events_for_previousUrl', -1],
+          ['value.last_events.percent_comparable_to_last_events_for_previous_url', -1]
+        ]
+      }
+    )    
+
   end
 
   def suggest_next_url(url, application_id)
