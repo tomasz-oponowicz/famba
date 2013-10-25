@@ -41,9 +41,28 @@ Please install [Git](http://git-scm.com/), [Mongo](http://www.mongodb.org/), [Ru
 
 Please install [Git](http://git-scm.com/) and [Heroku command line](https://toolbelt.herokuapp.com/) before you start.
 
-1. Create a free instance of the famba with the Heroku:
+1. Clone the famba project:
 
 		git clone git@github.com:tomasz-oponowicz/famba.git && cd ./famba
+		
+1. Adjust parameters for a suggestion algorithm to your needs, by modifying `config.yml.erb` file:
+
+
+		suggestion:
+			criteria:
+				transition:
+					all_events:
+						min_count: 1
+						min_percent_comparable_to_all_events_for_previous_url: 0.1
+					last_events:
+						min_count: 1
+						min_percent_comparable_to_last_events_for_previous_url: 0.1
+						past_hours: 1
+
+1. Commit your changes;
+
+1. Create a free instance of the famba with the Heroku:
+
 		heroku apps:create <your Heroku application ID>
 		heroku addons:add mongohq:sandbox
 		heroku run rake add_sample_website
