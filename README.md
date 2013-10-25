@@ -41,7 +41,7 @@ Please install [Git](http://git-scm.com/), [Mongo](http://www.mongodb.org/), [Ru
 
 Please install [Git](http://git-scm.com/) and [Heroku command line](https://toolbelt.herokuapp.com/) before you start.
 
-1. Clone the famba project:
+1. Clone the famba repository:
 
 		git clone git@github.com:tomasz-oponowicz/famba.git && cd ./famba
 		
