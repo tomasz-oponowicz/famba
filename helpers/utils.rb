@@ -22,15 +22,15 @@ class DeepStruct < OpenStruct
 end
 
 class String
-	def to_b
-	  "true" == self.downcase
-	end
+  def to_b
+    "true" == self.downcase
+  end
 end
 
 def build_database_connection(mongodb_uri)
-	uri = URI.parse(mongodb_uri)
-	database_name = uri.path.gsub(/^\//, '')
-	connection = Mongo::Connection.new(uri.host, uri.port).db(database_name)
-	connection.authenticate(uri.user, uri.password) unless (uri.user.nil? || uri.user.nil?)	
-	connection
+  uri = URI.parse(mongodb_uri)
+  database_name = uri.path.gsub(/^\//, '')
+  connection = Mongo::Connection.new(uri.host, uri.port).db(database_name)
+  connection.authenticate(uri.user, uri.password) unless (uri.user.nil? || uri.user.nil?) 
+  connection
 end
