@@ -53,6 +53,10 @@ end
 
 helpers Transitions, Events
 
+get '/health' do
+  "Service is operational"
+end
+
 get '/t' do
   halt 401 if unregistered_application?(params[:app_id])
 
