@@ -39,6 +39,14 @@ helpers do
     response.set_cookie("user_id", :value => SecureRandom.uuid) if cookies[:user_id].nil?
   end
 
+  def last_suggestion_active?
+    (Time.now - 60) < Time.at(cookies[:suggestion_timestamp].to_i)
+  end
+
+  def generate_suggestion_timestamp
+    response.set_cookie("suggestion_timestamp", :value => Time.now.to_i)
+  end
+
   def valid_parameters    
     %w(app_id previous_url url supported prerendered load_speed).each do |param| 
       halt 400 if params[param].nil?
@@ -70,24 +78,38 @@ get '/t' do
   event = build_event
   save_event(event)
 
+  # optimization: don't suggest if browser isn't supported
   unless event[:supported]
+    logger.debug("No suggestion because browser isn't supported")
 
     # content type should be `image/gif` if browser is NOT supported
-    content_type 'image/gif'
+    content_type 'image/gif'    
     status 204
+
     return nil
   end
 
-  suggestion = suggest_next_url(event[:url], event[:application_id])
-  
   # content type should be `application/javascript` if browser is supported
   content_type 'application/javascript', :charset => 'utf-8'
 
+  # optimization: don't suggest if old suggestion is still active (otherwise browser will ignore it)
+  if last_suggestion_active?
+    logger.debug("No suggestion because last suggestion is still active")
+
+    status 204 
+    return nil
+  end    
+
+  suggestion = suggest_next_url(event[:url], event[:application_id])
+  
   if suggestion.nil?
+    logger.debug("No suggestion")
+    
     status 204 
     return nil
   end
 
+  generate_suggestion_timestamp
   increase_suggestion_count(params[:app_id])
 
   "famba.suggest('#{suggestion}');"
