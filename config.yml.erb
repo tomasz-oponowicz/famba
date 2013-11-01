@@ -2,11 +2,11 @@ suggestion:
   criteria:
     transition:
       all_events:
-        min_count: 1
-        min_percent_comparable_to_all_events_for_previous_url: 0.1
+        min_count: 100
+        min_percent_comparable_to_all_events_for_previous_url: 0.9
       last_events:
-        min_count: 1
-        min_percent_comparable_to_last_events_for_previous_url: 0.1
+        min_count: 25
+        min_percent_comparable_to_last_events_for_previous_url: 0.75
         past_hours: 1
 mongodb_uri: 
   test: mongodb://localhost:27017/famba_test
