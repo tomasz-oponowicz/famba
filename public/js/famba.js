@@ -1,6 +1,6 @@
 
 /** @define {boolean} */
-var ENABLE_DEBUG = true;
+var ENABLE_DEBUG = true; // overriden by compiler
 
 (function(famba) {
 
@@ -25,6 +25,7 @@ var ENABLE_DEBUG = true;
 
   // public api
 
+  /** @expose */
   famba.suggest = function(url) {
     if (ENABLE_DEBUG) {
       window['console'].log("Suggested a next page, url='" + url + "'");
@@ -202,4 +203,4 @@ var ENABLE_DEBUG = true;
       window['console'].error(ex);
     }
   }
-})(window.famba = window.famba || {});
+})(window['famba'] = window['famba'] || {});
