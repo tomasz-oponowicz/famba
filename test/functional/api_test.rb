@@ -172,7 +172,7 @@ class ApiTest < Test::Unit::TestCase
 
     # then    
     assert_equal 200, last_response.status
-    assert_equal 'bar', last_response.body
+    assert_equal "famba.suggest('bar');", last_response.body
   end
 
   def test_trackAndSuggest_sufficientEventsCountAndNotSupported_urlNotSuggested
@@ -214,7 +214,7 @@ class ApiTest < Test::Unit::TestCase
 
     # then    
     assert_equal 200, last_response.status
-    assert_equal 'baz', last_response.body
+    assert_equal "famba.suggest('baz');", last_response.body
   end
 
   def test_trackAndSuggest_twoTransitionsAndFirstLessPopularRecently_secondUrlSuggested
@@ -250,7 +250,7 @@ class ApiTest < Test::Unit::TestCase
 
     # then    
     assert_equal 200, last_response.status
-    assert_equal 'baz', last_response.body
+    assert_equal "famba.suggest('baz');", last_response.body
   end  
 
   def test_trackAndSuggest_twoTransitionsEquallyPopularRecentlyButFirstMorePopularSinceTheBegining_firstUrlSuggested
@@ -284,7 +284,7 @@ class ApiTest < Test::Unit::TestCase
 
     # then    
     assert_equal 200, last_response.status
-    assert_equal 'bar', last_response.body
+    assert_equal "famba.suggest('bar');", last_response.body
   end  
 
    def test_trackAndSuggest_twoTransitionsWithInsufficientEventsCountRecentlyButFirstMorePopularSinceTheBegining_firstUrlSuggested
@@ -320,7 +320,7 @@ class ApiTest < Test::Unit::TestCase
 
     # then    
     assert_equal 200, last_response.status
-    assert_equal 'bar', last_response.body
+    assert_equal "famba.suggest('bar');", last_response.body
   end   
 
   # helpers

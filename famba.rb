@@ -67,16 +67,22 @@ get '/t' do
   save_event(event)
 
   unless event[:supported]
+
+    # content type should be `image/gif` if browser is NOT supported
+    content_type 'image/gif'
     status 204
     return nil
   end
 
   suggestion = suggest_next_url(event[:url], event[:application_id])
   
+  # content type should be `application/javascript` if browser is supported
+  content_type 'application/javascript', :charset => 'utf-8'
+
   if suggestion.nil?
     status 204 
     return nil
   end
-  
-  suggestion
+
+  "famba.suggest('#{suggestion}');"
 end

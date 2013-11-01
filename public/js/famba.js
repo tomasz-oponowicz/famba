@@ -2,13 +2,13 @@
 /** @define {boolean} */
 var ENABLE_DEBUG = true;
 
-(function() {
+(function(famba) {
 
   /** @const */
   var DEFAULT_TRACKING_URL = "http://localhost:4567/t";
 
   /** @const */
-  var CONFIGURATION = window['fambaConfig'];
+  var CONFIGURATION = window['FAMBA_CONFIG'];
 
   if (ENABLE_DEBUG && !window['console']) {
     window['console'] = {
@@ -22,6 +22,16 @@ var ENABLE_DEBUG = true;
   var tracked = false;
 
   // methods
+
+  // public api
+
+  famba.suggest = function(url) {
+    if (ENABLE_DEBUG) {
+      window['console'].log("Suggested a next page, url='" + url + "'");
+    }
+
+    createAndAppendLinkElement(url);
+  }  
 
   // helpers
 
@@ -68,6 +78,13 @@ var ENABLE_DEBUG = true;
   // track and suggest
 
   function track() {
+    if (tracked) {
+      if (ENABLE_DEBUG) {
+        window['console'].log("Skipped tracking because it was already tracked");
+      }
+      return;
+    }
+
     var imgElement = document.createElement('img');
 
     imgElement.setAttribute('src', buildUrl(false));
@@ -75,6 +92,8 @@ var ENABLE_DEBUG = true;
     imgElement.setAttribute('alt', '');
 
     document.getElementsByTagName('body')[0].appendChild(imgElement);
+
+    tracked = true;
   }
 
   function trackAndSuggest() {
@@ -85,43 +104,16 @@ var ENABLE_DEBUG = true;
       return;
     }
 
-    var request = new XMLHttpRequest();
+    var scriptElement = document.createElement('script')
 
-    request.open("GET", buildUrl(true), true);
+    scriptElement.setAttribute('src', buildUrl(true));
+    scriptElement.setAttribute('type', 'text/javascript');
+    scriptElement.async = true;
 
-    request.onreadystatechange = function() {
-
-      // halt if a request isn't finished and a response isn't ready
-      if (request.readyState != 4) {
-        return;
-      }
-
-      // halt if a server error
-      if (request.status != 200 && request.status != 204) {
-        if (ENABLE_DEBUG) {
-          window['console'].log("An error occurs while calling tracking method");
-        }        
-        return;
-      }
-
-      // halt if no suggestion
-      if (request.status == 204) {
-        if (ENABLE_DEBUG) {
-          window['console'].log("No suggestion");
-        }
-        return;
-      }
-
-      if (ENABLE_DEBUG) {
-        window['console'].log("Suggested a next page, url='" + request.responseText + "'");
-      }
-
-      createAndAppendLinkElement(request.responseText);
-    };
+    /* JSONP pattern: response will call `famba.suggest` if suggestion is available */
+    document.getElementsByTagName('body')[0].appendChild(scriptElement);
 
     tracked = true;
-
-    request.send();
   }
 
   function buildUrl(supported) {
@@ -210,4 +202,4 @@ var ENABLE_DEBUG = true;
       window['console'].error(ex);
     }
   }
-})();
+})(window.famba = window.famba || {});
