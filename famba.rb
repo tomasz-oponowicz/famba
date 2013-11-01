@@ -49,6 +49,10 @@ helpers do
       halt 400 if params[param].empty?
     end    
   end
+
+  def increase_suggestion_count(application_id)
+    settings.database['applications'].update({:_id => BSON::ObjectId(application_id) }, '$inc' => { :suggestion_count => 1 } )
+  end
 end
 
 helpers Transitions, Events
@@ -83,6 +87,8 @@ get '/t' do
     status 204 
     return nil
   end
+
+  increase_suggestion_count(params[:app_id])
 
   "famba.suggest('#{suggestion}');"
 end
