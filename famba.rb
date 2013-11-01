@@ -44,7 +44,13 @@ helpers do
   end
 
   def generate_suggestion_timestamp
-    response.set_cookie("suggestion_timestamp", :value => Time.now.to_i)
+    response.set_cookie(:suggestion_timestamp, :value => Time.now.to_i)
+  end
+
+  def remove_suggestion_timestamp
+    if params[:prerendered]
+      response.delete_cookie(:suggestion_timestamp)
+    end
   end
 
   def valid_parameters    
@@ -59,7 +65,7 @@ helpers do
   end
 
   def increase_suggestion_count(application_id)
-    settings.database['applications'].update({:_id => BSON::ObjectId(application_id) }, '$inc' => { :suggestion_count => 1 } )
+    settings.database['applications'].update( { :_id => application_id }, '$inc' => { :suggestion_count => 1 } )
   end
 end
 
@@ -92,6 +98,8 @@ get '/t' do
   # content type should be `application/javascript` if browser is supported
   content_type 'application/javascript', :charset => 'utf-8'
 
+  remove_suggestion_timestamp if event[:prerendered]
+
   # optimization: don't suggest if old suggestion is still active (otherwise browser will ignore it)
   if last_suggestion_active?
     logger.debug("No suggestion because last suggestion is still active")
@@ -110,7 +118,7 @@ get '/t' do
   end
 
   generate_suggestion_timestamp
-  increase_suggestion_count(params[:app_id])
+  increase_suggestion_count(event[:application_id])
 
   "famba.suggest('#{suggestion}');"
 end
