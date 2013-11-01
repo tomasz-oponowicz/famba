@@ -73,9 +73,9 @@ Please install [Git](http://git-scm.com/) and [Heroku command line](https://tool
 		<script type="text/javascript">
 			var fambaBaseURL = "http://<your Heroku application ID>.herokuapp.com"
 			
-			var fambaConfig = fambaConfig || {};
-			fambaConfig['app_id'] = '513dfad9e779892946000048';
-			fambaConfig['tracking_url'] = fambaBaseURL + '/t'
+			var FAMBA_CONFIG = FAMBA_CONFIG || {};
+			FAMBA_CONFIG['app_id'] = '513dfad9e779892946000048';
+			FAMBA_CONFIG['tracking_url'] = fambaBaseURL + '/t'
 		
 			(function() {
 				var a=document.createElement("script");
