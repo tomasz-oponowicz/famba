@@ -19,7 +19,6 @@ configure do
   # replace hash with structure
   settings.suggestion = DeepStruct.new(settings.suggestion)
   set :database, build_database_connection(settings.mongodb_uri)
-  set :logging, Logger::DEBUG
 end
 
 configure :development do
@@ -28,6 +27,10 @@ configure :development do
   set :server_settings, { :AccessLog => [] }
   set :logging, Logger::DEBUG  
 end   
+
+configure :production do
+  require 'newrelic_rpm'
+end
 
 helpers do  
   def unregistered_application?(application_id)
